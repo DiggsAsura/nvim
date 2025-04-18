@@ -114,4 +114,38 @@ require("lazy").setup({
       -- Valgfri konfigurasjon, keymaps håndteres i keymaps.lua
     end,
   },
+
+  -- gitsigns.nvim for visuelle Git-tegn og hunk-håndtering
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require("gitsigns").setup({
+        signs = {
+          add = { text = "+" },
+          change = { text = "~" },
+          delete = { text = "-" },
+          topdelete = { text = "‾" },
+          changedelete = { text = "~" },
+        },
+        signcolumn = true, -- Vis tegn i linjenummer-kolonnen
+        numhl = false, -- Ikke fremhev linjenumre
+        linehl = false, -- Ikke fremhev hele linjen
+        word_diff = false, -- Ikke vis inline diff som standard
+        current_line_blame = false, -- Deaktiver blame på nåværende linje som standard
+        on_attach = function(bufnr)
+          local gs = package.loaded.gitsigns
+
+          local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
+          end
+
+          -- Navigasjon mellom hunks
+          map("n", "]c", gs.next_hunk, { desc = "Neste Git hunk" })
+          map("n", "[c", gs.prev_hunk, { desc = "Forrige Git hunk" })
+        end,
+      })
+    end,
+  },
 })
