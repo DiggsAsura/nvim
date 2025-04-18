@@ -2,7 +2,9 @@
 local map = vim.keymap.set
 map("n", "<leader>e", ":Explore<CR>", { desc = "Åpne filutforsker" })
 map("n", "<leader>w", ":w<CR>", { desc = "Lagre fil" })
+map("n", "<leader>wq", ":wq<CR>", { desc = "Lagre og lukk fil" })
 map("n", "<leader>q", ":q<CR>", { desc = "Lukk vindu" })
+map("n", "<leader>xxx", ":qa!<CR>", { desc = "Tvungen avslutning, lagre nada" })
 
 -- Navigere mellom vinduer
 map("n", "<leader>h", "<C-w>h", { desc = "Gå til vindu til venstre" })
