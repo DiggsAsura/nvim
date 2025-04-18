@@ -1,0 +1,108 @@
+-- ~/.config/nvim/lua/plugins/init.lua
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+  -- Tema: Catppuccin med transparens
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    config = function()
+      require("catppuccin").setup({
+        transparent_background = true, -- Transparent bakgrunn
+        term_colors = true,
+        styles = {
+          comments = { "italic" },
+          keywords = { "bold" },
+        },
+      })
+      vim.cmd.colorscheme("catppuccin-mocha") -- Moderne farger, ikke for prangende
+    end,
+  },
+
+  -- LSP-støtte
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp", -- Autocompletion for LSP
+    },
+    config = function()
+      local lspconfig = require("lspconfig")
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      -- LSP-servere for språkene dine
+      local servers = { "phpactor", "html", "ts_ls", "cssls", "pyright", "bashls", "rust_analyzer" }
+      for _, lsp in ipairs(servers) do
+        lspconfig[lsp].setup({
+          capabilities = capabilities,
+        })
+      end
+    end,
+  },
+
+  -- Autocompletion
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+    },
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.abort(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        }),
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+          { name = "buffer" },
+          { name = "path" },
+        }),
+      })
+    end,
+  },
+
+  -- Trær for bedre kodeoversikt
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = { "php", "html", "javascript", "css", "python", "bash", "rust" },
+        highlight = { enable = true },
+        indent = { enable = true },
+      })
+    end,
+  },
+
+  -- Filutforsker
+  {
+    "nvim-tree/nvim-tree.lua",
+    config = function()
+      require("nvim-tree").setup()
+    end,
+  },
+})
