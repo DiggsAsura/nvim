@@ -6,7 +6,7 @@ map("n", "<leader>w", ":w<CR>", { desc = "Lagre fil" })
 map("n", "<leader>wa", ":wa<CR>", { desc = "Lagre alle endrede filer i buffer" })
 map("n", "<leader>wq", ":wq<CR>", { desc = "Lagre og lukk fil" })
 map("n", "<leader>q", ":q<CR>", { desc = "Lukk vindu" })
-map("n", "<leader>xxx", ":qa!<CR>", { desc = "Tvungen avslutning, lagre nada" })
+map("n", "<leader>x", ":q!<CR>", { desc = "Tvungen avslutning, lagre nada" })
 
 -- Navigere mellom vinduer
 map("n", "<leader>h", "<C-w>h", { desc = "Gå til vindu til venstre" })
