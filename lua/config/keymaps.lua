@@ -1,6 +1,7 @@
 -- ~/.config/nvim/lua/config/keymaps.lua
 local map = vim.keymap.set
-map("n", "<leader>e", ":Explore<CR>", { desc = "Åpne filutforsker" })
+--map("n", "<leader>e", ":Explore<CR>", { desc = "Åpne filutforsker" })
+map("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "Åpne/lukk filutforsker" })
 map("n", "<leader>w", ":w<CR>", { desc = "Lagre fil" })
 map("n", "<leader>wa", ":wa<CR>", { desc = "Lagre alle endrede filer i buffer" })
 map("n", "<leader>wq", ":wq<CR>", { desc = "Lagre og lukk fil" })
