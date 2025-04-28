@@ -43,7 +43,7 @@ require("lazy").setup({
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       -- LSP-servere for språkene dine
-      local servers = { "phpactor", "html", "ts_ls", "cssls", "pyright", "bashls", "rust_analyzer" }
+      local servers = { "intelephense", "html", "ts_ls", "cssls", "pyright", "bashls", "rust_analyzer" }
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup({
           capabilities = capabilities,
