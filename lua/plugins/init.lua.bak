@@ -1,3 +1,5 @@
+-- Backup fra før vi legger til Copilot 
+
 -- ~/.config/nvim/lua/plugins/init.lua
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -35,14 +37,15 @@ require("lazy").setup({
   -- LSP-støtte
   {
     "neovim/nvim-lspconfig",
-     -- cmp-nvim-lsp er nå en dependency for nvim-cmp, fjernet herfra for ryddighet
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp", -- Autocompletion for LSP
+    },
     config = function()
       local lspconfig = require("lspconfig")
-      -- Bruk capabilities fra cmp-nvim-lsp (som nå lastes som dependency for nvim-cmp)
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       -- LSP-servere for språkene dine
-      local servers = { "intelephense", "html", "tsserver", "cssls", "pyright", "bashls", "rust_analyzer" } -- Bruker tsserver fra din forrige config
+      local servers = { "intelephense", "html", "ts_ls", "cssls", "pyright", "bashls", "rust_analyzer" }
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup({
           capabilities = capabilities,
@@ -51,7 +54,7 @@ require("lazy").setup({
     end,
   },
 
-  -- Autocompletion (Oppdatert for Copilot)
+  -- Autocompletion
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -59,20 +62,15 @@ require("lazy").setup({
       "hrsh7th/cmp-path",
       "L3MON4D3/LuaSnip",
       "saadparwaiz1/cmp_luasnip",
-      "hrsh7th/cmp-nvim-lsp",     -- Flyttet hit, nødvendig for LSP completions i cmp
-      "zbirenbaum/copilot-cmp",   -- <--- Ny avhengighet for Copilot
     },
     config = function()
       local cmp = require("cmp")
-      require("copilot_cmp").setup() -- <--- Ny linje: Initialiser copilot-cmp
-
       cmp.setup({
         snippet = {
           expand = function(args)
             require("luasnip").lsp_expand(args.body)
           end,
         },
-        -- Dine eksisterende mappings beholdes:
         mapping = cmp.mapping.preset.insert({
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -82,7 +80,6 @@ require("lazy").setup({
         }),
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
-          { name = "copilot" },   -- <--- Ny kilde for Copilot
           { name = "luasnip" },
           { name = "buffer" },
           { name = "path" },
@@ -91,22 +88,27 @@ require("lazy").setup({
     end,
   },
 
-  -- Trær for bedre kodeoversikt (Beholdt fra din forrige versjon)
+  -- Trær for bedre kodeoversikt
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     config = function()
       require("nvim-treesitter.configs").setup({
         ensure_installed = { "php", "html", "javascript", "css", "python", "bash", "rust", 'lua', 'vim', 'vimdoc', 'blade' },
+
+        -- Installer parser synktront (eller sett til false for async)
         sync_install = false,
+
+        -- Installer manglende parser automatisk
         auto_install = true,
+
         highlight = { enable = true },
         indent = { enable = true },
       })
     end,
   },
 
-  -- Filutforsker (Beholdt uendret)
+  -- Filutforsker
   {
     "nvim-tree/nvim-tree.lua",
     config = function()
@@ -114,7 +116,7 @@ require("lazy").setup({
     end,
   },
 
-  -- vim-fugitive for Git-integrasjon (Beholdt uendret)
+  -- vim-fugitive for Git-integrasjon
   {
     "tpope/vim-fugitive",
     config = function()
@@ -122,7 +124,7 @@ require("lazy").setup({
     end,
   },
 
-  -- gitsigns.nvim for visuelle Git-tegn og hunk-håndtering (Beholdt uendret, inkl. din on_attach)
+  -- gitsigns.nvim for visuelle Git-tegn og hunk-håndtering
   {
     "lewis6991/gitsigns.nvim",
     config = function()
@@ -134,19 +136,20 @@ require("lazy").setup({
           topdelete = { text = "‾" },
           changedelete = { text = "~" },
         },
-        signcolumn = true,
-        numhl = false,
-        linehl = false,
-        word_diff = false,
-        current_line_blame = false,
-        -- Din eksisterende on_attach beholdes:
+        signcolumn = true, -- Vis tegn i linjenummer-kolonnen
+        numhl = false, -- Ikke fremhev linjenumre
+        linehl = false, -- Ikke fremhev hele linjen
+        word_diff = false, -- Ikke vis inline diff som standard
+        current_line_blame = false, -- Deaktiver blame på nåværende linje som standard
         on_attach = function(bufnr)
           local gs = package.loaded.gitsigns
+
           local function map(mode, l, r, opts)
             opts = opts or {}
             opts.buffer = bufnr
             vim.keymap.set(mode, l, r, opts)
           end
+
           -- Navigasjon mellom hunks
           map("n", "]c", gs.next_hunk, { desc = "Neste Git hunk" })
           map("n", "[c", gs.prev_hunk, { desc = "Forrige Git hunk" })
@@ -154,14 +157,4 @@ require("lazy").setup({
       })
     end,
   },
-
-  -- GitHub Copilot (Offisiell plugin)  <--- Ny plugin-blokk
-  {
-    "github/copilot.vim",
-    config = function()
-      -- Anbefalt: Deaktiver automatisk start. Aktiver med :Copilot enable
-      vim.g.copilot_auto_enable = 0
-    end,
-  },
-
-}) -- Slutt på require("lazy").setup
+})
