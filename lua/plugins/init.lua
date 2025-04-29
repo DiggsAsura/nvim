@@ -42,7 +42,7 @@ require("lazy").setup({
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       -- LSP-servere for språkene dine
-      local servers = { "intelephense", "html", "tsserver", "cssls", "pyright", "bashls", "rust_analyzer" } -- Bruker tsserver fra din forrige config
+      local servers = { "intelephense", "html", "ts_ls", "cssls", "pyright", "bashls", "rust_analyzer" } -- Bruker tsserver fra din forrige config
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup({
           capabilities = capabilities,
