@@ -92,7 +92,14 @@ require("lazy").setup({
     build = ":TSUpdate",
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = { "php", "html", "javascript", "css", "python", "bash", "rust" },
+        ensure_installed = { "php", "html", "javascript", "css", "python", "bash", "rust", 'lua', 'vim', 'vimdoc', 'blade' },
+
+        -- Installer parser synktront (eller sett til false for async)
+        sync_install = false,
+
+        -- Installer manglende parser automatisk
+        auto_install = true,
+
         highlight = { enable = true },
         indent = { enable = true },
       })
