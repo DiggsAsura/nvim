@@ -163,5 +163,38 @@ require("lazy").setup({
       vim.g.copilot_auto_enable = 0
     end,
   },
+-- Legg til denne blokken sammen med dine andre plugins i require("lazy").setup({...})
 
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    branch = "main", -- Eller en spesifikk release-tag for stabilitet
+    dependencies = {
+      { "github/copilot.vim" }, -- Viktig: Krever vanligvis den grunnleggende Copilot-pluginen for autentisering og kjernefunksjonalitet
+      { "nvim-lua/plenary.nvim" }, -- En vanlig avhengighet for mange Neovim-plugins
+      -- Valgfrie avhengigheter for et penere brukergrensesnitt:
+      -- { "nvim-telescope/telescope.nvim" }, -- For valg av prompts, etc.
+      -- { "stevearc/dressing.nvim" }, -- For bedre UI på input-bokser
+    },
+    opts = {
+      -- Her kan du legge inn konfigurasjonsalternativer
+      -- F.eks. for å tilpasse utseendet på chat-vinduet:
+      -- window = {
+      --   layout = 'vertical', -- 'horizontal', 'float'
+      --   width = 0.4, -- Bredde hvis vertikal/float
+      --   height = 0.9, -- Høyde hvis horisontal/float
+      -- },
+      -- debug = false, -- Sett til true for feilsøking
+      -- show_help = true, -- Vis hjelpetekst i chat-vinduet
+    },
+    -- Valgfritt, men anbefalt: Legg til keymaps for enkel tilgang
+    -- Du ville lagt disse i din separate keymap-fil, men her er eksempler:
+    -- keys = {
+    --   { "<leader>cc", "<cmd>CopilotChatToggle<cr>", desc = "Toggle Copilot Chat" },
+    --   -- Keymaps for å bruke med visuell markering:
+    --   { "<leader>ce", "<cmd>CopilotChatExplain<cr>", mode = "v", desc = "CopilotChat - Forklar" },
+    --   { "<leader>cf", "<cmd>CopilotChatFix<cr>", mode = "v", desc = "CopilotChat - Fiks" },
+    --   { "<leader>ct", "<cmd>CopilotChatTests<cr>", mode = "v", desc = "CopilotChat - Generer tester" },
+    --   { "<leader>co", "<cmd>CopilotChatOptimize<cr>", mode = "v", desc = "CopilotChat - Optimer" },
+    -- },
+  },
 }) -- Slutt på require("lazy").setup
